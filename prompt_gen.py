@@ -99,6 +99,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             del user_states[user_id]
             return
 
+    if chat_type == "private":
+        await update.message.reply_text("👋 Привет! Чтобы начать, напиши команду /prompt.")
+    else:
+        return
+
     await update.message.reply_text("Type /prompt to start.")
 
 
