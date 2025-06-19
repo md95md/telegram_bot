@@ -81,9 +81,14 @@ async def subject_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_states[user_id]["state"] = "waiting_for_description"
     await query.message.reply_text("Добавьте еще несколько слов, что хотите увидеть на картине:")
 
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("👋 Привет! Чтобы начать, напиши команду /prompt.")
+
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     text = update.message.text
+    chat_type = update.message.chat.type
 
     if user_id in user_states:
         state_info = user_states[user_id]
@@ -92,17 +97,17 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             palette = state_info["palette"]
             subject = state_info["subject"]
             styled_prompt = MOOD_TEMPLATES[mood].format(user_input=text, palette=palette, subject=subject)
-            await update.message.reply_text(f"🎯 Prompt:\n{styled_prompt}\n\nСкопируйте промпт и отправьте в ChatGPT 4o:\nhttps://chatgpt.com/g/g-pmuQfob8d-image-generator")
+            await update.message.reply_text(
+                f"🎯 Prompt:\n{styled_prompt}\n\nСкопируйте промпт и отправьте в ChatGPT 4o:\n"
+                "https://chatgpt.com/g/g-pmuQfob8d-image-generator"
+            )
             del user_states[user_id]
             return
 
-    chat_type = update.message.chat.type
     if chat_type == "private":
-        await update.message.reply_text("👋 Привет! Чтобы начать, напиши команду /start.")
+        await update.message.reply_text("👋 Привет! Чтобы начать, напиши команду /start")
     else:
         return
-
-    await update.message.reply_text("Type /start to start.")
 
 
 if __name__ == '__main__':
