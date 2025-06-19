@@ -4,7 +4,7 @@ from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filte
 
 import os
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 user_states = {}
 
