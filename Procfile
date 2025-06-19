@@ -1,0 +1,1 @@
+worker: python prompt_gen.py
