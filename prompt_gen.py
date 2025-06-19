@@ -8,6 +8,8 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 user_states = {}
 
+print(f"BOT TOKEN = {TELEGRAM_BOT_TOKEN}")
+
 MOOD_TEMPLATES = {
     "melancholic": "A symbolic acrylic painting with bold brush strokes and clean, bright colors.\nThe scene expresses a sense of melancholy with a focus on {subject} — {user_input}.\nMuted tones and a quiet, introspective atmosphere. Format: 1:1. Palette: {palette}.",
 
