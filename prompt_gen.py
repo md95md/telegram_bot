@@ -85,9 +85,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     text = update.message.text
 
-    if text == "/start":
-        return
-
     if user_id in user_states:
         state_info = user_states[user_id]
         if state_info["state"] == "waiting_for_description":
@@ -95,12 +92,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             palette = state_info["palette"]
             subject = state_info["subject"]
             styled_prompt = MOOD_TEMPLATES[mood].format(user_input=text, palette=palette, subject=subject)
-            await update.message.reply_text(f"🎯 Prompt:\n{styled_prompt}\n\nСкопируй промпт и отправь в ChatGPT 4o:\nhttps://chat.openai.com/?model=gpt-4o")
+            await update.message.reply_text(f"🎯 Prompt:\n{styled_prompt}\n\nСкопируйте промпт и отправьте в ChatGPT 4o:\nhttps://chatgpt.com/g/g-pmuQfob8d-image-generator")
             del user_states[user_id]
             return
 
+    chat_type = update.message.chat.type
     if chat_type == "private":
-        await update.message.reply_text("👋 Привет! Чтобы начать, напиши команду /prompt.")
+        await update.message.reply_text("👋 Привет! Чтобы начать, напиши команду /start.")
     else:
         return
 
@@ -110,6 +108,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("prompt", prompt_command))
     app.add_handler(CallbackQueryHandler(mood_chosen, pattern="^mood_"))
     app.add_handler(CallbackQueryHandler(palette_chosen, pattern="^palette_"))
