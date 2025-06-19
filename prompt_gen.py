@@ -85,7 +85,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     text = update.message.text
 
-    if text == "/prompt":
+    if text == "/start":
         return
 
     if user_id in user_states:
@@ -95,8 +95,18 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             palette = state_info["palette"]
             subject = state_info["subject"]
             styled_prompt = MOOD_TEMPLATES[mood].format(user_input=text, palette=palette, subject=subject)
-            await update.message.reply_text(f"🎯 Prompt:\n{styled_prompt}\n\nСкопируй промпт и отправь в DALL·E: https://openai.com/dall-e")
-            del user_states[user_id]
+            await update.message.reply_text(f"🎯 Prompt:\n{styled_prompt}")
+
+user_states[user_id] = {"prompt_result": styled_prompt}
+
+keyboard = InlineKeyboardMarkup([
+    [InlineKeyboardButton("📋 Скопировать промпт", callback_data="copy_prompt")]
+])
+
+await update.message.reply_text(
+    "🔗 Используй этот промпт в ChatGPT-4o:\nhttps://chat.openai.com/?model=gpt-4o",
+    reply_markup=keyboard
+)
             return
 
     if chat_type == "private":
@@ -104,7 +114,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         return
 
-    await update.message.reply_text("Type /prompt to start.")
+    await update.message.reply_text("Type /start to start.")
 
 
 if __name__ == '__main__':
